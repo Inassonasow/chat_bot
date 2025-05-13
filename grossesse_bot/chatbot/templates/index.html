@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Grossesse</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+    <div class="chatbox">
+        <div class="messages" id="messages"></div>
+        <div class="input">
+            <input type="text" id="userInput" placeholder="Tapez votre message...">
+            <button onclick="sendMessage()">Envoyer</button>
+        </div>
+    </div>
+
+    <script>
+        function sendMessage() {
+            const userInput = document.getElementById('userInput').value;
+            const messages = document.getElementById('messages');
+
+            // Ajouter le message de l'utilisateur
+            messages.innerHTML += `<div><strong>Vous:</strong> ${userInput}</div>`;
+
+            // Envoyer le message au serveur
+            fetch('/chatbot/api/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message: userInput }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Ajouter la réponse du chatbot
+                messages.innerHTML += `<div><strong>Chatbot:</strong> ${data.response}</div>`;
+                document.getElementById('userInput').value = '';
+                messages.scrollTop = messages.scrollHeight;
+            });
+        }
+    </script>
+</body>
+</html>
