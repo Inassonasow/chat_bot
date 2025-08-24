@@ -1,0 +1,81 @@
+# Fichiers de développement
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Fichiers de données volumineux
+*.pkl
+*.joblib
+*.h5
+*.pth
+*.csv
+*.xlsx
+*.json
+
+# Base de données
+*.sqlite3
+*.db
+
+# Fichiers de configuration locaux
+.env
+.env.local
+.env.production
+.env.staging
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+logs/
+
+# Cache
+.cache/
+.pytest_cache/
+
+# Coverage
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+.hypothesis/
+
+# Fichiers de build
+build/
+dist/
+*.egg-info/
+
+# Fichiers de test
+test_*.py
+*_test.py
+tests/
+
+# Documentation
+*.md
+docs/
+
+# Scripts de déploiement
+deploy_*.py
+DEPLOYMENT_SUMMARY.md
+
+# Fichiers temporaires
+*.tmp
+*.temp

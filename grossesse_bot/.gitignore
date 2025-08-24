@@ -74,3 +74,4 @@ htmlcov/
 coverage.xml
 *.cover
 .hypothesis/
+.vercel

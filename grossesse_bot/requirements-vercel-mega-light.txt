@@ -1,0 +1,7 @@
+# Dépendances MEGA-ULTRA-LÉGÈRES pour Vercel
+# Juste joblib pour charger les modèles .pkl
+joblib>=1.3
+
+# Pas de Django, scikit-learn, pandas, numpy, requests
+# urllib est intégré à Python
+# Taille estimée : moins de 10 MB !
