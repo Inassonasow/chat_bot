@@ -8,3 +8,4 @@ echo Pour installer des packages, tapez: pip install nom_du_package
 echo.
 cmd /k
 
+

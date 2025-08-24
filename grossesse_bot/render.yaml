@@ -3,7 +3,7 @@ services:
     name: assistant-grossesse-ia
     env: python
     buildCommand: "./build.sh"
-    startCommand: "gunicorn grossesse_bot.wsgi:application"
+    startCommand: "gunicorn grossesse_bot.wsgi:application --bind 0.0.0.0:$PORT"
     envVars:
       - key: PYTHON_VERSION
         value: 3.9.16
@@ -15,4 +15,17 @@ services:
         value: false
       - key: ALLOWED_HOSTS
         value: ".onrender.com"
+      - key: PORT
+        value: 10000
+    autoDeploy: true
+    healthCheckPath: /chatbot/
+    buildFilter:
+      paths:
+        - "requirements.txt"
+        - "build.sh"
+        - "manage.py"
+        - "grossesse_bot/**"
+        - "chatbot/**"
+        - "static/**"
+        - "templates/**"
 

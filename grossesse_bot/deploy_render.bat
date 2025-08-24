@@ -17,3 +17,4 @@ echo ⏳ Attendez 5-10 minutes pour le premier deploiement...
 echo 🔄 Les prochains deploiements seront plus rapides
 echo.
 pause
+

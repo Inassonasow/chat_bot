@@ -227,3 +227,4 @@ Votre chatbot de grossesse est maintenant déployé sur Surge et accessible part
 📱 **Compatibilité** : L'application fonctionne sur tous les navigateurs modernes et est optimisée pour mobile.
 
 🚀 **Performance** : Grâce au CDN global de Surge, votre application se charge rapidement partout dans le monde.
+

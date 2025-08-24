@@ -5,3 +5,4 @@ requests>=2.31
 # Pas de scikit-learn, pandas, numpy - trop volumineux
 # Les modèles seront chargés depuis des URLs externes
 
+

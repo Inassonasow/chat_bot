@@ -259,3 +259,4 @@ class GrossesseKnowledgeBase:
                f"{', '.join(urgences[:3])}... "
                f"⚠️ CONSULTATION RAPIDE : {', '.join(consultation[:3])}...")
 
+

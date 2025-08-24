@@ -177,3 +177,4 @@ vercel --prod
 
 **🎉 Avec cette configuration, votre chatbot respectera la limite de 250 MB de Vercel !**
 
+

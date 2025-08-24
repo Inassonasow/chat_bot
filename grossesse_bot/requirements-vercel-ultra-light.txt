@@ -4,3 +4,4 @@ requests>=2.31
 # Pas de Django, scikit-learn, pandas, numpy
 # Juste requests pour télécharger les modèles depuis des URLs externes
 
+
