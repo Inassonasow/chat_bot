@@ -1,82 +1,222 @@
 /* Style général */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     margin: 0;
-    padding: 0;
+    padding: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
 }
 
 /* Conteneur du chatbot */
 .chatbox {
-    width: 400px;
-    height: 300px;
+    width: 600px;
+    height: 500px;
     background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    position: relative;
+}
+
+/* En-tête du chatbot */
+.chatbox::before {
+    content: "🤰 Assistant Grossesse IA";
+    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 16px;
 }
 
 /* Zone des messages */
 .messages {
     flex: 1;
-    padding: 15px;
+    padding: 20px;
     overflow-y: auto;
-    background-color: #f9f9f9;
+    background-color: #f8f9fa;
+    scroll-behavior: smooth;
 }
 
-/* Style des messages */
-.messages div {
-    margin-bottom: 10px;
-    padding: 10px;
-    border-radius: 5px;
-    max-width: 80%;
-}
-
-.messages div.user {
-    background-color: #d1e7dd;
-    align-self: flex-end;
+/* Style des messages utilisateur */
+.user-message {
+    margin-bottom: 15px;
+    padding: 12px 16px;
+    border-radius: 18px 18px 5px 18px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    max-width: 70%;
+    margin-left: auto;
     text-align: right;
+    box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
 }
 
-.messages div.bot {
-    background-color: #f8d7da;
-    align-self: flex-start;
+/* Style des messages du bot */
+.bot-message {
+    margin-bottom: 15px;
+    padding: 12px 16px;
+    border-radius: 18px 18px 18px 5px;
+    background-color: #ffffff;
+    color: #333;
+    max-width: 80%;
+    margin-right: auto;
     text-align: left;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-left: 4px solid #ff6b6b;
+}
+
+/* Message de bienvenue */
+.welcome-message {
+    background: linear-gradient(135deg, #ffecd2, #fcb69f);
+    border-left: 4px solid #ff6b6b;
+    animation: slideIn 0.5s ease-out;
+}
+
+/* Messages d'urgence */
+.emergency-message {
+    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+    color: white;
+    border-left: 4px solid #c92a2a;
+    animation: pulse 2s infinite;
+}
+
+/* Messages d'erreur */
+.error-message {
+    background-color: #ffe6e6;
+    color: #d63031;
+    border-left: 4px solid #d63031;
+    font-style: italic;
+}
+
+/* Indicateur de frappe */
+.typing-indicator {
+    margin-bottom: 15px;
+    padding: 12px 16px;
+    border-radius: 18px 18px 18px 5px;
+    background-color: #e9ecef;
+    color: #6c757d;
+    max-width: 80%;
+    margin-right: auto;
+    text-align: left;
+    animation: pulse 1.5s infinite;
+}
+
+.typing {
+    font-style: italic;
+}
+
+/* Animations */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+/* Scrollbar personnalisée */
+.messages::-webkit-scrollbar {
+    width: 6px;
+}
+
+.messages::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.messages::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+.messages::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }
 
 /* Zone d'entrée */
 .input {
     display: flex;
-    padding: 10px;
-    background-color: #ffffff;
-    border-top: 1px solid #ddd;
+    padding: 15px;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border-top: 1px solid #dee2e6;
 }
 
 .input input {
     flex: 1;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    padding: 12px 16px;
+    border: 2px solid #e9ecef;
+    border-radius: 25px;
     font-size: 16px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.input input:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.input input::placeholder {
+    color: #6c757d;
+    font-style: italic;
 }
 
 .input button {
-    margin-left: 10px;
-    padding: 10px 20px;
-    background-color: #007bff;
+    margin-left: 12px;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
     color: #ffffff;
     border: none;
-    border-radius: 5px;
+    border-radius: 25px;
     cursor: pointer;
     font-size: 16px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(255, 107, 107, 0.3);
 }
 
 .input button:hover {
-    background-color: #0056b3;
+    background: linear-gradient(135deg, #ee5a24, #d63031);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+}
+
+.input button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 10px rgba(255, 107, 107, 0.3);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .chatbox {
+        width: 95%;
+        height: 80vh;
+        margin: 10px;
+    }
+    
+    body {
+        padding: 10px;
+    }
+    
+    .user-message,
+    .bot-message {
+        max-width: 90%;
+    }
 }

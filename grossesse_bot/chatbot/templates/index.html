@@ -18,28 +18,119 @@
 
     <script>
         function sendMessage() {
-            const userInput = document.getElementById('userInput').value;
+            const userInput = document.getElementById('userInput').value.trim();
+            if (!userInput) return;
+            
             const messages = document.getElementById('messages');
 
             // Ajouter le message de l'utilisateur
-            messages.innerHTML += `<div><strong>Vous:</strong> ${userInput}</div>`;
+            const userDiv = document.createElement('div');
+            userDiv.className = 'user-message';
+            userDiv.innerHTML = `<strong>Vous:</strong> ${userInput}`;
+            messages.appendChild(userDiv);
+
+            // Afficher un indicateur de frappe
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'typing-indicator';
+            typingDiv.innerHTML = '<strong>Assistant:</strong> <span class="typing">Réflexion en cours...</span>';
+            messages.appendChild(typingDiv);
+            messages.scrollTop = messages.scrollHeight;
 
             // Envoyer le message au serveur
             fetch('/chatbot/api/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
                 },
                 body: JSON.stringify({ message: userInput }),
             })
             .then(response => response.json())
             .then(data => {
+                // Supprimer l'indicateur de frappe
+                messages.removeChild(typingDiv);
+                
                 // Ajouter la réponse du chatbot
-                messages.innerHTML += `<div><strong>Chatbot:</strong> ${data.response}</div>`;
+                const botDiv = document.createElement('div');
+                botDiv.className = 'bot-message';
+                
+                // Formater la réponse avec markdown basique
+                let formattedResponse = data.response
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\n/g, '<br>');
+                
+                botDiv.innerHTML = `<strong>🤖 Assistant Grossesse:</strong> ${formattedResponse}`;
+                
+                // Ajouter des classes spéciales pour les urgences
+                if (data.is_emergency) {
+                    botDiv.className += ' emergency-message';
+                }
+                
+                messages.appendChild(botDiv);
                 document.getElementById('userInput').value = '';
+                messages.scrollTop = messages.scrollHeight;
+                
+                // Afficher des informations de debug si disponibles
+                if (data.user_profile && Object.keys(data.user_profile).length > 0) {
+                    console.log('Profil utilisateur:', data.user_profile);
+                }
+            })
+            .catch(error => {
+                // Supprimer l'indicateur de frappe en cas d'erreur
+                if (messages.contains(typingDiv)) {
+                    messages.removeChild(typingDiv);
+                }
+                
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error-message';
+                errorDiv.innerHTML = '<strong>Erreur:</strong> Impossible de se connecter au serveur. Veuillez réessayer.';
+                messages.appendChild(errorDiv);
                 messages.scrollTop = messages.scrollHeight;
             });
         }
+        
+        // Fonction pour obtenir le token CSRF
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        
+        // Permettre l'envoi avec Enter
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('userInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+            
+            // Message de bienvenue
+            const messages = document.getElementById('messages');
+            const welcomeDiv = document.createElement('div');
+            welcomeDiv.className = 'bot-message welcome-message';
+            welcomeDiv.innerHTML = `
+                <strong>🤖 Assistant Grossesse:</strong> 
+                Bonjour ! Je suis votre assistant spécialisé en grossesse. 
+                Je peux répondre à toutes vos questions sur :<br>
+                • Les symptômes et leur signification<br>
+                • L'alimentation et la nutrition<br>
+                • L'exercice physique<br>
+                • Le développement de votre bébé<br>
+                • La préparation à l'accouchement<br>
+                • L'évaluation de votre profil de risque<br><br>
+                N'hésitez pas à me poser vos questions ! 😊
+            `;
+            messages.appendChild(welcomeDiv);
+        });
     </script>
 </body>
 </html>

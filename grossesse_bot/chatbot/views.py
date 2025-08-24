@@ -92,47 +92,75 @@ def predire_risque(request):
     return Response(serializer.errors, status=400)
 
 import re
+from .intelligent_chatbot import IntelligentGrossesseChatbot
+
+# Instance globale du chatbot intelligent
+intelligent_bot = IntelligentGrossesseChatbot()
 
 @api_view(['POST'])
 def chatbot(request):
-    user_message = request.data.get('message', '').lower()
-
-    # Réponses simples pour les salutations
-    if 'bonjour' in user_message:
-        return Response({"response": "Bonjour ! Comment puis-je vous aider avec votre grossesse ?"})
-
-    # Si l'utilisateur donne des informations sur sa grossesse
-    if 'je suis' in user_message or 'j’ai' in user_message:
-        try:
-            # Extraire dynamiquement les informations de l'utilisateur
-            age = re.search(r'(\d+)\s*ans', user_message)
-            mois_grossesse = re.search(r'(\d+)\s*mois', user_message)
-            poids_kg = re.search(r'(\d+)\s*kg', user_message)
-            taille_cm = re.search(r'(\d+)\s*cm', user_message)
-
+    user_message = request.data.get('message', '')
+    
+    if not user_message:
+        return Response({"response": "Je n'ai pas reçu votre message. Pouvez-vous réessayer ?"})
+    
+    try:
+        # Traiter le message avec le chatbot intelligent
+        bot_response = intelligent_bot.process_message(user_message)
+        
+        # Si le chatbot indique qu'il faut faire une prédiction de risque
+        if bot_response.get('ready_for_prediction'):
+            extracted_info = bot_response.get('extracted_info', {})
+            
+            # Convertir les semaines en mois pour la prédiction
+            mois_grossesse = extracted_info.get('semaines', 20) // 4
+            
             data = {
-                "age": int(age.group(1)) if age else 30,  # Valeur par défaut
-                "mois_grossesse": int(mois_grossesse.group(1)) if mois_grossesse else 5,
-                "poids_kg": float(poids_kg.group(1)) if poids_kg else 65,
-                "taille_cm": int(taille_cm.group(1)) if taille_cm else 170,
+                "age": int(extracted_info.get('age', 30)),
+                "mois_grossesse": int(mois_grossesse),
+                "poids_kg": float(extracted_info.get('poids', 65)),
+                "taille_cm": int(extracted_info.get('taille', 170)),
                 "activité": "modérée",  # Valeur par défaut
                 "régime": "omnivore",
                 "antécédents": "aucun",
                 "symptôme": "aucun"
             }
-
+            
             # Effectuer la prédiction
-            resultat = effectuer_prediction(data)
-
-            # Retourner la réponse du chatbot
-            return Response({"response": f"Votre grossesse est considérée à risque {resultat['profil_risque']}. {resultat['conseil']}"})
-
-        except ValueError as e:
-            return Response({"response": f"Erreur : {str(e)}"})
-
-    # Réponse par défaut
-    return Response({"response": "Je suis désolé, je n'ai pas compris. Pouvez-vous reformuler ?"})
-    return Response(serializer.errors, status=400)
+            try:
+                resultat = effectuer_prediction(data)
+                prediction_response = f"\n\n🤖 **Évaluation de votre profil de risque :**\n"
+                prediction_response += f"Niveau de risque : **{resultat['profil_risque']}**\n"
+                prediction_response += f"Conseil : {resultat['conseil']}\n\n"
+                prediction_response += "ℹ️ Cette évaluation est indicative. Consultez toujours votre médecin pour un suivi personnalisé."
+                
+                bot_response['response'] += prediction_response
+                
+            except ValueError as e:
+                bot_response['response'] += f"\n\n⚠️ Erreur lors de l'évaluation : {str(e)}"
+        
+        # Préparer la réponse finale
+        response_data = {
+            "response": bot_response['response'],
+            "intention": bot_response.get('intention', 'unknown'),
+            "is_emergency": bot_response.get('is_emergency', False),
+            "user_profile": bot_response.get('user_profile', {})
+        }
+        
+        # Ajouter un conseil santé aléatoire de temps en temps
+        if bot_response.get('intention') not in ['urgence', 'evaluation_risque'] and len(user_message) > 20:
+            import random
+            if random.random() < 0.3:  # 30% de chance
+                health_tip = intelligent_bot.get_health_tips()
+                response_data["response"] += f"\n\n💡 **Conseil du jour :** {health_tip}"
+        
+        return Response(response_data)
+        
+    except Exception as e:
+        return Response({
+            "response": "Je rencontre une difficulté technique. Pouvez-vous reformuler votre question ?",
+            "error": str(e)
+        }, status=500)
 def chatbot_page(request):
     return render(request, 'index.html')
 
