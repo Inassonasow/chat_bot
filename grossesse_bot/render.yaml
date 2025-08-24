@@ -17,15 +17,4 @@ services:
         value: ".onrender.com"
       - key: PORT
         value: 10000
-    autoDeploy: true
-    healthCheckPath: /chatbot/
-    buildFilter:
-      paths:
-        - "requirements.txt"
-        - "build.sh"
-        - "manage.py"
-        - "grossesse_bot/**"
-        - "chatbot/**"
-        - "static/**"
-        - "templates/**"
 

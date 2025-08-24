@@ -76,3 +76,6 @@ coverage.xml
 .hypothesis/
 .vercel
 
+# Fichiers temporaires
+tatus
+
