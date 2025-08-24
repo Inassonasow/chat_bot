@@ -64,3 +64,4 @@ CONSEILS_RISQUE = {
     "modéré": "Votre grossesse est à risque modéré. Consultez un médecin deux fois par mois.",
     "élevé": "Votre grossesse est à risque élevé. Suivi médical renforcé requis.",
 }
+

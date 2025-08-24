@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🤰 Chatbot Grossesse - Assistant IA</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🤰 Assistant Grossesse IA</h1>
+            <p>Votre compagnon intelligent pour une grossesse sereine</p>
+        </header>
+        
+        <main class="main-content">
+            <!-- Section Chatbot -->
+            <section class="chatbot-section">
+                <h2>💬 Chat avec l'IA</h2>
+                <div class="chat-container">
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="message bot-message">
+                            <div class="message-content">
+                                <p>👋 Bonjour ! Je suis votre assistant grossesse IA. Posez-moi vos questions sur la grossesse, la nutrition, les symptômes, etc.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chat-input-container">
+                        <input type="text" id="chatInput" placeholder="Posez votre question..." maxlength="500">
+                        <button id="sendButton">📤</button>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Section Prédiction de Risque -->
+            <section class="prediction-section">
+                <h2>🔮 Évaluation des Risques</h2>
+                <form id="predictionForm" class="prediction-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="age">Âge</label>
+                            <input type="number" id="age" name="age" min="15" max="50" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="mois_grossesse">Mois de grossesse</label>
+                            <input type="number" id="mois_grossesse" name="mois_grossesse" min="1" max="9" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="poids_kg">Poids (kg)</label>
+                            <input type="number" id="poids_kg" name="poids_kg" min="40" max="150" step="0.1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="taille_cm">Taille (cm)</label>
+                            <input type="number" id="taille_cm" name="taille_cm" min="140" max="200" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="activite">Niveau d'activité</label>
+                            <select id="activite" name="activite" required>
+                                <option value="">Choisir...</option>
+                                <option value="faible">Faible</option>
+                                <option value="modérée">Modérée</option>
+                                <option value="élevée">Élevée</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="regime">Régime alimentaire</label>
+                            <select id="regime" name="regime" required>
+                                <option value="">Choisir...</option>
+                                <option value="omnivore">Omnivore</option>
+                                <option value="végétarien">Végétarien</option>
+                                <option value="autre">Autre</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="antecedents">Antécédents médicaux</label>
+                            <select id="antecedents" name="antecedents" required>
+                                <option value="">Choisir...</option>
+                                <option value="aucun">Aucun</option>
+                                <option value="hypertension">Hypertension</option>
+                                <option value="diabète">Diabète</option>
+                                <option value="asthme">Asthme</option>
+                                <option value="autre">Autre</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="symptome">Symptômes actuels</label>
+                            <select id="symptome" name="symptome" required>
+                                <option value="">Choisir...</option>
+                                <option value="aucun">Aucun</option>
+                                <option value="nausée">Nausée</option>
+                                <option value="fatigue">Fatigue</option>
+                                <option value="douleur">Douleur</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">🔮 Évaluer les risques</button>
+                </form>
+                
+                <div id="predictionResult" class="prediction-result hidden"></div>
+            </section>
+            
+            <!-- Section Informations -->
+            <section class="info-section">
+                <h2>📚 Informations Utiles</h2>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h3>🍎 Nutrition</h3>
+                        <p>Conseils alimentaires adaptés à chaque trimestre de grossesse</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>🏃‍♀️ Activité Physique</h3>
+                        <p>Exercices recommandés et précautions à prendre</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>😴 Bien-être</h3>
+                        <p>Gestion du stress et amélioration du sommeil</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>⚠️ Symptômes</h3>
+                        <p>Reconnaître les symptômes normaux et ceux qui nécessitent une consultation</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <footer class="footer">
+            <p>🤰 Assistant Grossesse IA - Développé avec ❤️ pour les futures mamans</p>
+            <p><strong>👩‍💻 Développé par : Inassona Sow</strong></p>
+            <p><small>⚠️ Cet outil ne remplace pas l'avis médical. Consultez toujours votre professionnel de santé.</small></p>
+        </footer>
+    </div>
+    
+    <script src="app.js"></script>
+</body>
+</html>

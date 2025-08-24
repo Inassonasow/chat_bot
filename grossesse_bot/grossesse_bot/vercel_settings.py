@@ -56,3 +56,4 @@ LOGGING = {
 # Les modèles seront chargés depuis le stockage Vercel
 MODEL_PATH = '/tmp/model_risque_grossesse.pkl'
 LABEL_ENCODERS_PATH = '/tmp/label_encoders.pkl'
+

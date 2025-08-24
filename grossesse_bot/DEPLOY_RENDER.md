@@ -1,142 +1,166 @@
-# 🚀 Déploiement sur Render.com (BEAUCOUP PLUS SIMPLE !)
-
-## 🎯 **Pourquoi Render.com ?**
-
-- ✅ **Limite : 500 MB** (2x plus que Vercel !)
-- ✅ **Gratuit** pour les projets personnels
-- ✅ **Déploiement automatique** depuis GitHub
-- ✅ **Support Python natif** (pas de contraintes serverless)
-- ✅ **Base de données incluse** (PostgreSQL)
-- ✅ **Interface simple** et intuitive
+# 🚀 Guide de Déploiement sur Render - Assistant Grossesse IA
 
 ## 📋 **Prérequis**
 
-1. **Compte GitHub** avec votre projet
-2. **Compte Render.com** (gratuit)
-3. **Projet Django** fonctionnel localement
+- ✅ Compte GitHub avec votre code source
+- ✅ Compte Render (gratuit)
+- ✅ Application Django fonctionnelle en local
 
-## 🔧 **Étapes de déploiement**
+## 🔧 **Étape 1 : Préparation du Code**
 
-### **1. Préparer le projet**
-
-Assurez-vous que votre `requirements.txt` contient :
-
-```txt
-Django>=5.0
-djangorestframework>=3.14
-scikit-learn>=1.3
-joblib>=1.3
-pandas>=2.0
-numpy>=1.24
-gunicorn>=20.1.0
-whitenoise>=6.0.0
-```
-
-### **2. Créer le fichier render.yaml**
-
-Le fichier `render.yaml` est déjà créé ! Il configure :
-- **Type** : Application web Python
-- **Plan** : Gratuit
-- **Build** : Installation des dépendances + migrations
-- **Start** : Gunicorn (serveur WSGI)
-
-### **3. Déployer sur Render**
-
-#### **Option A : Déploiement automatique (RECOMMANDÉ)**
-
-1. **Allez sur [render.com](https://render.com)**
-2. **Connectez-vous** avec votre compte GitHub
-3. **Cliquez "New +"** → **"Web Service"**
-4. **Connectez votre repo GitHub**
-5. **Sélectionnez votre projet**
-6. **Render détecte automatiquement** le `render.yaml`
-7. **Cliquez "Create Web Service"**
-
-#### **Option B : Déploiement manuel**
-
-1. **Créez un nouveau Web Service**
-2. **Nom** : `chatbot-grossesse`
-3. **Environment** : `Python`
-4. **Build Command** : `pip install -r requirements.txt && python manage.py migrate`
-5. **Start Command** : `gunicorn grossesse_bot.wsgi:application`
-
-### **4. Configuration des variables d'environnement**
-
-Render configure automatiquement :
-- `PYTHON_VERSION` : 3.11.0
-- `DJANGO_SETTINGS_MODULE` : grossesse_bot.settings
-- `DEBUG` : False
-- `ALLOWED_HOSTS` : .onrender.com
-- `SECRET_KEY` : Généré automatiquement
-
-### **5. Attendre le déploiement**
-
-- **Build** : 2-5 minutes
-- **Déploiement** : 1-2 minutes
-- **URL** : `https://votre-app.onrender.com`
-
-## 🌐 **Votre URL sera :**
-
-```
-https://chatbot-grossesse.onrender.com
-```
-
-## 📱 **Test de l'API**
-
-Une fois déployé, testez :
-
+### **1.1 Créer un fichier `requirements.txt`**
 ```bash
-# Test de santé
-curl https://chatbot-grossesse.onrender.com/health
-
-# Test du chatbot
-curl -X POST https://chatbot-grossesse.onrender.com/chatbot/api/ \
-  -H "Content-Type: application/json" \
-  -d '{"message": "Bonjour, j\'ai des nausées"}'
+pip freeze > requirements.txt
 ```
 
-## 🔄 **Déploiement automatique**
+### **1.2 Créer un fichier `build.sh`**
+```bash
+#!/usr/bin/env bash
+# build.sh
+pip install -r requirements.txt
+python manage.py collectstatic --noinput
+python manage.py migrate
+```
 
-À chaque push sur GitHub :
-1. **Render détecte** les changements
-2. **Rebuild automatiquement** l'application
-3. **Redéploie** en quelques minutes
-4. **Zéro intervention** de votre part !
+### **1.3 Créer un fichier `render.yaml`**
+```yaml
+services:
+  - type: web
+    name: assistant-grossesse-ia
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn grossesse_bot.wsgi:application"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.9.16
+      - key: DJANGO_SETTINGS_MODULE
+        value: grossesse_bot.settings
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: false
+      - key: ALLOWED_HOSTS
+        value: ".onrender.com"
+```
 
-## 🆚 **Comparaison Vercel vs Render**
+## 🌐 **Étape 2 : Déploiement sur Render**
 
-| Aspect | Vercel | Render |
-|--------|--------|--------|
-| **Limite taille** | 250 MB ❌ | 500 MB ✅ |
-| **Déploiement** | Complexe ❌ | Simple ✅ |
-| **Python** | Serverless ❌ | Natif ✅ |
-| **Base de données** | Non ❌ | Oui ✅ |
-| **Gratuit** | Oui ✅ | Oui ✅ |
+### **2.1 Créer un compte Render**
+1. Allez sur [render.com](https://render.com)
+2. Créez un compte gratuit
+3. Connectez-vous
 
-## 🎉 **Avantages de Render**
+### **2.2 Connecter votre repository GitHub**
+1. Cliquez sur "New +"
+2. Sélectionnez "Web Service"
+3. Connectez votre repository GitHub
+4. Sélectionnez le repository `Grossesse_chat`
 
-1. **Plus de limite de 250 MB** - Votre projet Django complet fonctionne !
-2. **Déploiement automatique** - Push sur GitHub = déploiement automatique
-3. **Support Python natif** - Pas de contraintes serverless
-4. **Base de données incluse** - PostgreSQL gratuit
-5. **Interface simple** - Pas de configuration complexe
-6. **Performance** - Serveurs dédiés, pas de cold start
+### **2.3 Configuration du service**
+- **Name** : `assistant-grossesse-ia`
+- **Environment** : `Python 3`
+- **Build Command** : `./build.sh`
+- **Start Command** : `gunicorn grossesse_bot.wsgi:application`
+- **Plan** : `Free`
 
-## 🚨 **En cas de problème**
+### **2.4 Variables d'environnement**
+- `PYTHON_VERSION` : `3.9.16`
+- `DJANGO_SETTINGS_MODULE` : `grossesse_bot.settings`
+- `SECRET_KEY` : Généré automatiquement
+- `DEBUG` : `false`
+- `ALLOWED_HOSTS` : `.onrender.com`
 
-- **Logs** : Disponibles dans l'interface Render
-- **Variables d'environnement** : Vérifiez dans Settings
-- **Build** : Regardez les logs de build
-- **Support** : Communauté active et documentation claire
+## 🔄 **Étape 3 : Déploiement Automatique**
+
+### **3.1 Push sur GitHub**
+```bash
+git add .
+git commit -m "Préparation pour déploiement Render"
+git push origin main
+```
+
+### **3.2 Render déploie automatiquement**
+- Chaque push déclenche un nouveau déploiement
+- Vous pouvez voir les logs en temps réel
+- L'URL sera : `https://assistant-grossesse-ia.onrender.com`
+
+## 🎨 **Étape 4 : Personnalisation (Couleurs Roses + Signature)**
+
+### **4.1 Modifier le CSS pour les couleurs roses**
+```css
+:root {
+    --primary-color: #ff69b4;      /* Rose vif */
+    --secondary-color: #c71585;    /* Rose sombre */
+    --accent-color: #ffb6c1;       /* Rose clair */
+    --bg-primary: #ffffff;
+    --bg-secondary: #fff0f5;       /* Rose très clair */
+    --border-color: #ffc0cb;       /* Rose clair */
+}
+```
+
+### **4.2 Ajouter votre signature**
+```html
+<footer class="footer">
+    <p>🤰 Assistant Grossesse IA - Développé avec ❤️ pour les futures mamans</p>
+    <p><strong>👩‍💻 Développé par : Inassona Sow</strong></p>
+</footer>
+```
+
+## ✅ **Avantages de Render vs Surge**
+
+| Fonctionnalité | Render | Surge |
+|----------------|--------|-------|
+| **Django** | ✅ Support complet | ❌ Pas de support |
+| **Python** | ✅ Support complet | ❌ Pas de support |
+| **Base de données** | ✅ PostgreSQL inclus | ❌ Pas de base de données |
+| **Chatbot IA** | ✅ Fonctionne | ❌ Simulation uniquement |
+| **Déploiement automatique** | ✅ GitHub | ✅ GitHub |
+| **Gratuit** | ✅ 750h/mois | ✅ Illimité |
+| **HTTPS** | ✅ Automatique | ✅ Automatique |
+
+## 🧪 **Test du Déploiement**
+
+### **5.1 Vérifier l'URL**
+- Votre app sera accessible sur : `https://assistant-grossesse-ia.onrender.com`
+- Le chatbot fonctionnera exactement comme en local
+- Les couleurs roses seront visibles
+- Votre signature sera affichée
+
+### **5.2 Tester les fonctionnalités**
+- ✅ Chatbot avec IA
+- ✅ Évaluation des risques
+- ✅ Interface en couleurs roses
+- ✅ Signature "Inassona Sow"
+
+## 🔧 **Dépannage**
+
+### **Erreur de build**
+- Vérifiez `requirements.txt`
+- Vérifiez `build.sh` (permissions d'exécution)
+
+### **Erreur de démarrage**
+- Vérifiez `startCommand`
+- Vérifiez les variables d'environnement
+
+### **Erreur de base de données**
+- Vérifiez les migrations
+- Vérifiez les modèles
+
+## 📚 **Ressources**
+
+- [Documentation Render](https://render.com/docs)
+- [Déploiement Django sur Render](https://render.com/docs/deploy-django)
+- [Variables d'environnement](https://render.com/docs/environment-variables)
+
+## 🎯 **Prochaines Étapes**
+
+1. **Déployer sur Render** (ce guide)
+2. **Ajouter les couleurs roses** (CSS)
+3. **Ajouter votre signature** (HTML)
+4. **Tester en ligne**
+5. **Partager l'URL** 🌍✨
 
 ---
 
-## 🎯 **Conclusion**
+**🚀 Votre Assistant Grossesse IA sera bientôt accessible partout dans le monde !**
 
-**Oubliez Vercel !** Render.com est :
-- **2x plus généreux** (500 MB vs 250 MB)
-- **10x plus simple** à configurer
-- **100% compatible** avec Django
-- **Gratuit** et fiable
-
-**Votre chatbot sera en ligne en 5 minutes !** 🚀

@@ -258,3 +258,4 @@ class GrossesseKnowledgeBase:
         return (f"🚨 SIGNES D'URGENCE (appelez immédiatement) : "
                f"{', '.join(urgences[:3])}... "
                f"⚠️ CONSULTATION RAPIDE : {', '.join(consultation[:3])}...")
+

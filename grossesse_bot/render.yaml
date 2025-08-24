@@ -1,21 +1,18 @@
 services:
   - type: web
-    name: chatbot-grossesse
+    name: assistant-grossesse-ia
     env: python
-    plan: free
-    buildCommand: |
-      pip install -r requirements.txt
-      python manage.py collectstatic --noinput
-      python manage.py migrate
-    startCommand: gunicorn grossesse_bot.wsgi:application
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn grossesse_bot.wsgi:application"
     envVars:
       - key: PYTHON_VERSION
-        value: 3.11.0
+        value: 3.9.16
       - key: DJANGO_SETTINGS_MODULE
         value: grossesse_bot.settings
-      - key: DEBUG
-        value: False
-      - key: ALLOWED_HOSTS
-        value: ".onrender.com"
       - key: SECRET_KEY
         generateValue: true
+      - key: DEBUG
+        value: false
+      - key: ALLOWED_HOSTS
+        value: ".onrender.com"
+

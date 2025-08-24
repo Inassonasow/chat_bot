@@ -7,3 +7,4 @@ Write-Host "Pour installer des packages, tapez: pip install nom_du_package" -For
 Write-Host ""
 Write-Host "Appuyez sur une touche pour continuer..." -ForegroundColor Cyan
 $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+
